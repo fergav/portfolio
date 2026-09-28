@@ -1,8 +1,8 @@
 ---
 # Origen: Videos/MeMiranofifi.mp4 · video: Videos/MeMiranofifi.mp4
-titulo: "Título del proyecto"
+titulo: "Registro de proceso de instalación inmersiva en forma de cabina que evoca la experiencia emocional del impacto de las micro interacciones dentro de la vía pública en personas en situación de calle."
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
-descripcion: "Descripción breve del proyecto: qué es, en qué contexto se hizo y con qué herramientas."
+descripcion: ""
 categoria: fotos-videos
 imagen: ./imagen.jpg
 video: ./video.mp4

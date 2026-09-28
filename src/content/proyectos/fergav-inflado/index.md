@@ -1,8 +1,8 @@
 ---
 # Origen: Modelado 3D/fergav inflao.jpg
-titulo: "Título del proyecto"
+titulo: "Experimentación Tipográfica"
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
-descripcion: "Descripción breve del proyecto: qué es, en qué contexto se hizo y con qué herramientas."
+descripcion: ""
 categoria: modelado-3d
 imagen: ./imagen.jpg
 imagenAlt: "TODO-ALT"

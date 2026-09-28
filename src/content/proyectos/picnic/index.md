@@ -1,8 +1,8 @@
 ---
 # Origen: Videos/picnicc.MP4 · video: Videos/picnicc.MP4
-titulo: "Picnic"
+titulo: "Video para Taller de Conceptualización donde se muestra resultado de móvil comestible donde rescatamos los aspectos emocionales de un coro gestionado dentro de un hogar italiano."
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
-descripcion: "Descripción breve del proyecto: qué es, en qué contexto se hizo y con qué herramientas."
+descripcion: ""
 categoria: fotos-videos
 imagen: ./imagen.jpg
 video: ./video.mp4

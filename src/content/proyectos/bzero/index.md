@@ -1,8 +1,8 @@
 ---
 # Origen: D.Servicio/E03_BZe-E01.pdf
-titulo: "Título del proyecto"
+titulo: "Propuesta para BZero sobre cómo reducir una gran cantidad de desechos en un evento de corta duración y poder ampliar los ámbitos en los que circula la empresa."
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
-descripcion: "Descripción breve del proyecto: qué es, en qué contexto se hizo y con qué herramientas."
+descripcion: ""
 categoria: diseno-de-servicios
 imagen: ./imagen.jpg
 paginado: true
