@@ -57,12 +57,20 @@ body {
   container-type: inline-size;
 }
 
-/* Texto display: Bold Oblique verde con contorno negro. */
+/*
+ * Texto display: Bold Oblique verde con contorno negro.
+ * El contorno se pinta detrás del relleno (paint-order), así las letras que se
+ * tocan por el tracking negativo se funden en una sola silueta en vez de que el
+ * contorno de una se dibuje encima de la otra. Como la mitad interior del trazo
+ * queda tapada por el relleno, el ancho se duplica para que la línea visible
+ * siga midiendo --contorno-ancho.
+ */
 .display {
   font-weight: var(--peso-display);
   font-style: var(--estilo-display);
   color: var(--color-texto);
-  -webkit-text-stroke: var(--contorno-ancho) var(--color-contorno);
+  -webkit-text-stroke: calc(2 * var(--contorno-ancho)) var(--color-contorno);
+  paint-order: stroke fill;
 }
 
 :focus-visible {
