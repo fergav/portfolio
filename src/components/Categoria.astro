@@ -1,0 +1,118 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import TarjetaProyecto from './TarjetaProyecto.astro';
+
+interface Props {
+  categoria: CollectionEntry<'categorias'>;
+  proyectos: CollectionEntry<'proyectos'>[];
+}
+
+const { categoria, proyectos } = Astro.props;
+const idPanel = `panel-${categoria.id}`;
+---
+
+<!-- Marca que hay JS antes de pintar los paneles: así empiezan cerrados sin parpadeo.
+     Sin JS los paneles quedan abiertos (mejora progresiva). -->
+<script is:inline>document.documentElement.classList.add('js');</script>
+
+<div class="categoria" data-categoria>
+  <h3 class="categoria__encabezado">
+    <button class="categoria__boton display" aria-expanded="true" aria-controls={idPanel}>
+      <span class="categoria__nombre">{categoria.data.nombre}</span>
+      <span class="categoria__indicador" aria-hidden="true">
+        <span class="categoria__mas">[+]</span><span class="categoria__menos">[−]</span>
+      </span>
+    </button>
+  </h3>
+  <div class="categoria__panel" id={idPanel}>
+    <div class="categoria__interior">
+      <div class="categoria__grilla">
+        {proyectos.map((p) => <TarjetaProyecto proyecto={p} />)}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  for (const categoria of document.querySelectorAll<HTMLElement>('[data-categoria]')) {
+    const boton = categoria.querySelector('button')!;
+    const panel = categoria.querySelector<HTMLElement>('.categoria__panel')!;
+
+    const aplicar = (abierta: boolean) => {
+      categoria.toggleAttribute('data-abierta', abierta);
+      boton.setAttribute('aria-expanded', String(abierta));
+      panel.inert = !abierta;
+    };
+
+    aplicar(false);
+    boton.addEventListener('click', () => aplicar(!categoria.hasAttribute('data-abierta')));
+  }
+</script>
+
+<style>
+  .categoria + .categoria {
+    margin-top: var(--espacio-categorias);
+  }
+
+  .categoria__boton {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+    text-align: start;
+  }
+
+  .categoria__nombre {
+    font-size: var(--fs-categoria);
+    line-height: var(--lh-categoria);
+  }
+
+  .categoria__indicador {
+    font-size: var(--fs-indicador);
+    line-height: var(--lh-indicador);
+  }
+
+  /* Sin JS: abierto, indicador [−]. Con JS: según data-abierta. */
+  .categoria__mas,
+  :global(html.js) .categoria[data-abierta] .categoria__mas {
+    display: none;
+  }
+
+  :global(html.js) .categoria:not([data-abierta]) .categoria__mas {
+    display: inline;
+  }
+
+  :global(html.js) .categoria:not([data-abierta]) .categoria__menos {
+    display: none;
+  }
+
+  /* Acordeón: solo movimiento de altura. */
+  .categoria__panel {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows var(--duracion-acordeon) ease-out;
+  }
+
+  :global(html.js) .categoria:not([data-abierta]) .categoria__panel {
+    grid-template-rows: 0fr;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .categoria__panel {
+      transition: none;
+    }
+  }
+
+  .categoria__interior {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Un proyecto por fila; las dos columnas las arma cada tarjeta. */
+  .categoria__grilla {
+    display: grid;
+    row-gap: var(--grilla-gap-y);
+    padding-top: var(--panel-espacio-superior);
+    padding-bottom: var(--panel-espacio-inferior);
+  }
+</style>

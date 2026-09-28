@@ -1,0 +1,150 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import PaginasProyecto from './PaginasProyecto.astro';
+
+interface Props {
+  proyecto: CollectionEntry<'proyectos'>;
+}
+
+const { proyecto } = Astro.props;
+const { titulo, fecha, descripcion, imagen, video, imagenAlt, desplazable, paginado } = proyecto.data;
+
+const fechaTexto = fecha
+  ? fecha.toLocaleDateString('es-CL', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+  : 'Mes AAAA'; // PENDIENTE: placeholder mientras no haya fecha
+const fechaIso = fecha?.toISOString().slice(0, 7);
+
+// Los videos viven junto al index.md del proyecto; Vite les da una URL con hash.
+const videos = import.meta.glob<string>('/src/content/proyectos/*/*.mp4', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+});
+const carpeta = '/' + proyecto.filePath!.replace(/\/[^/]+$/, '');
+const videoUrl = video ? videos[`${carpeta}/${video.replace(/^\.\//, '')}`] : undefined;
+if (video && !videoUrl) throw new Error(`No se encontró el video "${video}" en ${carpeta}`);
+const poster = videoUrl ? await getImage({ src: imagen, width: 1280, format: 'webp' }) : undefined;
+---
+
+<article class="tarjeta">
+  <div class="tarjeta__visual">
+    {
+      paginado ? (
+        <PaginasProyecto carpeta={carpeta} alt={imagenAlt} video={videoUrl} poster={poster?.src} />
+      ) : videoUrl ? (
+        <video
+          class="tarjeta__medio"
+          src={videoUrl}
+          poster={poster!.src}
+          controls
+          preload="none"
+          playsinline
+          aria-label={imagenAlt}
+        />
+      ) : desplazable ? (
+        // Imagen alta: ocupa todo el ancho y se recorre con scroll dentro del recuadro.
+        // tabindex para poder desplazarla también con el teclado.
+        <div class="tarjeta__medio tarjeta__desplazable" tabindex="0" role="region" aria-label={imagenAlt}>
+          <Image
+            src={imagen}
+            alt={imagenAlt}
+            widths={[480, 720, 960, 1280, 1920]}
+            sizes="(min-width: 768px) 50vw, 100vw"
+            loading="lazy"
+          />
+        </div>
+      ) : (
+        <Image
+          class="tarjeta__medio"
+          src={imagen}
+          alt={imagenAlt}
+          widths={[480, 720, 960, 1280]}
+          sizes="(min-width: 768px) 50vw, 100vw"
+          loading="lazy"
+        />
+      )
+    }
+  </div>
+  <div class="tarjeta__texto">
+    <h4 class="tarjeta__titulo">{titulo}</h4>
+    {fechaIso ? <time datetime={fechaIso}>{fechaTexto}</time> : <p>{fechaTexto}</p>}
+    {descripcion && <p class="tarjeta__descripcion">{descripcion}</p>}
+  </div>
+</article>
+
+<style>
+  /* Un proyecto por fila: visual en una columna y texto en la otra.
+     Las filas alternan: la primera con el visual a la izquierda. */
+  .tarjeta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--grilla-gap-x);
+    align-items: start;
+  }
+
+  .tarjeta:nth-child(even) .tarjeta__visual {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .tarjeta:nth-child(even) .tarjeta__texto {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .tarjeta__medio {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--proporcion-imagen);
+    object-fit: contain;
+  }
+
+  .tarjeta__desplazable {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .tarjeta__desplazable :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
+  .tarjeta__texto {
+    padding-top: var(--tarjeta-espacio-titulo);
+    font-size: var(--fs-tarjeta);
+    line-height: var(--lh-tarjeta);
+    color: var(--color-cuerpo);
+  }
+
+  .tarjeta__titulo {
+    font-size: inherit;
+    font-weight: var(--peso-cuerpo);
+  }
+
+  .tarjeta__texto time {
+    display: block;
+  }
+
+  .tarjeta__descripcion {
+    padding-top: var(--tarjeta-espacio-texto);
+  }
+
+  /* Breakpoint PENDIENTE (propuesta: 768px). Mobile: visual arriba, texto abajo. */
+  @media (width < 768px) {
+    .tarjeta {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tarjeta:nth-child(even) .tarjeta__visual,
+    .tarjeta:nth-child(even) .tarjeta__texto {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .tarjeta__texto {
+      padding-top: var(--tarjeta-espacio-texto);
+    }
+  }
+</style>

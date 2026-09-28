@@ -1,0 +1,88 @@
+/*
+ * Tokens de diseño: ÚNICA fuente de verdad.
+ * Unidad base: 1u = ancho del contenedor raíz / 1366 (artboard 1366 × 768).
+ * --u usa cqi y se resuelve dentro de .raiz (container-type: inline-size).
+ */
+:root {
+  --u: calc(100cqi / 1366);
+
+  /* Colores */
+  --color-fondo: #858585;
+  --color-texto: #c0fe69;
+  --color-contorno: #000000;
+  --color-cuerpo: #ffffff;
+
+  /* Tipografía: familia y estilos */
+  --fuente: "neue-haas-grotesk-display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --peso-display: 700;
+  --estilo-display: italic;
+  --peso-cuerpo: 300;
+
+  /* Contorno del texto verde: 1u, mínimo 1px */
+  --contorno-ancho: max(1px, calc(1 * var(--u)));
+
+  /* Tamaños, interlineados y tracking */
+  --fs-logo: calc(240 * var(--u));
+  --lh-logo: 1.2;
+  --tracking-logo: -0.07em;
+
+  --fs-nav: calc(53 * var(--u));
+  --lh-nav: calc(77 / 53);
+
+  --fs-categoria: calc(98 * var(--u));
+  --lh-categoria: 1.2;
+
+  --fs-indicador: calc(60.51 * var(--u));
+  --lh-indicador: calc(128.08 / 60.51);
+
+  --fs-flecha-paginas: calc(var(--fs-indicador) / 2); /* flechas de las presentaciones: mitad del [+] */
+
+  --fs-cuerpo: max(16px, calc(28 * var(--u)));
+  --lh-cuerpo: 1.2;
+
+  --fs-subtitulo: calc(31 * var(--u));
+  --lh-subtitulo: calc(77 / 31);
+
+  --fs-tarjeta: max(16px, calc(24 * var(--u)));
+  --lh-tarjeta: 1.2; /* PROVISORIO */
+
+  /* Layout */
+  --margen-lateral: calc(48 * var(--u));
+  --espacio-categorias: calc(16 * var(--u));
+  --grilla-gap-x: calc(32 * var(--u));
+  --grilla-gap-y: calc(56 * var(--u));
+  --proporcion-imagen: 4 / 3;
+  --espacio-secciones: calc(160 * var(--u)); /* PROVISORIO */
+
+  --nav-espacio-superior: calc(16 * var(--u)); /* PROVISORIO */
+  --panel-espacio-superior: calc(24 * var(--u)); /* PROVISORIO: título de categoría → grilla */
+  --panel-espacio-inferior: calc(48 * var(--u)); /* PROVISORIO: grilla → siguiente categoría */
+  --tarjeta-espacio-texto: calc(12 * var(--u)); /* PROVISORIO: imagen → texto */
+  --tarjeta-espacio-titulo: 2lh; /* dos saltos de línea antes del título (texto al lado del visual) */
+
+  /* About + Contact: medidos de docs/referencia/about-contact.jpeg (1280 px de ancho → ×1366/1280) */
+  --fs-logo-about: calc(170 * var(--u));
+  --about-espacio-logo: calc(27 * var(--u)); /* logotipo → párrafo */
+  --lh-lista-about: calc(30 / 28);
+  --fs-nota: calc(9 * var(--u)); /* "CertificadoUC", "Cursando Taller VII" */
+  --lh-contacto: calc(35 / 31);
+  --about-foto-ancho: calc(480 * var(--u));
+  --about-foto-proporcion: 450 / 463;
+  --about-foto-zoom: 1.2; /* encuadre más cerrado, como en la referencia */
+  --about-foto-zoom-origen: 77% 100%;
+  --about-foto-desfase: calc(100 * var(--u)); /* bajada de la foto respecto del logotipo */
+  --about-espacio-subsecciones: calc(31 * var(--u)); /* párrafo → subsecciones */
+  --about-col-software: calc(242 * var(--u));
+  --about-col-idiomas: calc(294 * var(--u));
+  --about-subtitulo-lista: calc(-10 * var(--u)); /* acerca cada lista a su subtítulo */
+  --about-escalon-idiomas: calc(71 * var(--u)); /* columnas en escalera */
+  --about-escalon-educacion: calc(175 * var(--u));
+  --about-espacio-contacto: calc(27 * var(--u)); /* foto → contacto */
+
+  /* Foco visible */
+  --foco-ancho: max(2px, calc(3 * var(--u))); /* PROVISORIO */
+  --foco-separacion: max(2px, calc(4 * var(--u))); /* PROVISORIO */
+
+  /* Movimiento */
+  --duracion-acordeon: 300ms;
+}

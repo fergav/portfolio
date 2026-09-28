@@ -1,0 +1,37 @@
+---
+import { getImage } from 'astro:assets';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import og from '../assets/og-provisorio.png';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+}
+
+const { titulo, descripcion } = Astro.props;
+const ogImagen = await getImage({ src: og, format: 'png', width: 1200 });
+// Sin `site` configurado (dominio pendiente) la URL queda relativa.
+const ogUrl = Astro.site ? new URL(ogImagen.src, Astro.site).href : ogImagen.src;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:image" content={ogUrl} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- Pendiente: kit de Adobe Fonts (preconnect a use.typekit.net + <link> del proyecto). -->
+  </head>
+  <body>
+    <div class="raiz">
+      <slot />
+    </div>
+  </body>
+</html>

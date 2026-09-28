@@ -1,0 +1,39 @@
+---
+// Datos según docs/referencia/about-contact.jpeg.
+// Se asume que @fergav13 es Instagram (PENDIENTE de confirmar).
+// Todos los enlaces se abren en una pestaña nueva.
+const enlaces = [
+  { texto: 'fernandogavilani@uc.cl', href: 'mailto:fernandogavilani@uc.cl' },
+  // WhatsApp: abre un chat nuevo con este número.
+  { texto: '+56 9 9109 7886', href: 'https://wa.me/56991097886' },
+  { texto: '@fergav13', href: 'https://www.instagram.com/fergav13/' },
+];
+---
+
+<section class="contact" id="contact" aria-labelledby="contact-titulo">
+  <h2 class="visualmente-oculto" id="contact-titulo">Contact</h2>
+  <ul>
+    {
+      enlaces.map((e) => (
+        <li>
+          <a class="contact__enlace display" href={e.href} target="_blank" rel="noopener">
+            {e.texto}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .contact {
+    margin-top: var(--about-espacio-contacto);
+    text-align: end;
+  }
+
+  .contact__enlace {
+    font-size: var(--fs-subtitulo);
+    line-height: var(--lh-contacto);
+    text-decoration: none;
+  }
+</style>

@@ -1,0 +1,177 @@
+---
+import { Image } from 'astro:assets';
+import foto from '../assets/about/foto.jpg';
+
+// Contenido según docs/referencia/about-contact.jpeg (se respeta la escritura del diseñador).
+const software = [
+  'Rhino7', 'KeyShot11', 'Illustrator', 'LightRoom', 'PhotoShop', 'Premiere', 'AfterEffects',
+  'Fusion360', 'TouchDesigner', 'Blender', 'Procreate', 'ProcreateDreams', 'NomadSculpt', 'Canva',
+  'Figma', 'Processing', 'CapCut', 'Insta360 Studio', 'AbletonLive12', 'RekordBox',
+];
+const idiomas = [{ texto: 'Español Nativo' }, { texto: 'Inglés C1', nota: 'CertificadoUC' }];
+const educacion = [{ texto: 'Diseño Integral UC', detalle: '___2023-2_Cursando Taller VII' }];
+---
+
+<section class="about" id="about" aria-labelledby="about-titulo">
+  <h2 class="visualmente-oculto" id="about-titulo">About</h2>
+
+  <div class="about__principal">
+    <p class="about__logo display" aria-hidden="true">fergav</p>
+    <p class="about__texto">
+      Soy una persona adaptable, calmada y optimista. Motivada por el cruce entre estructuras
+      físicas, puestas en escena y diseño de servicios. Me interesa cómo se habita e interactúa
+      dentro de un lugar, la curatoría, los flujos de usuarios y el cuidado en cada punto de
+      contacto.
+    </p>
+
+    <div class="about__subsecciones">
+      <div class="about__columna">
+        <h3 class="about__subtitulo display">software</h3>
+        <ul class="about__lista">
+          {software.map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+      <div class="about__columna about__columna--idiomas">
+        <h3 class="about__subtitulo display">idiomas</h3>
+        <ul class="about__lista">
+          {
+            idiomas.map((i) => (
+              <li>
+                {i.texto}
+                {i.nota && <small class="about__nota">{i.nota}</small>}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="about__columna about__columna--educacion">
+        <h3 class="about__subtitulo display">educación</h3>
+        <ul class="about__lista">
+          {
+            educacion.map((e) => (
+              <li>
+                {e.texto}
+                {e.detalle && <small class="about__nota about__nota--debajo">{e.detalle}</small>}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="about__lateral">
+    <div class="about__foto">
+      <Image
+        src={foto}
+        alt="TODO-ALT"
+        widths={[480, 720, 960, 1280, 1600]}
+        sizes="(min-width: 768px) 43vw, 100vw"
+        loading="lazy"
+      />
+    </div>
+    <!-- Contact va bajo la foto, como en la referencia. -->
+    <slot />
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--about-foto-ancho);
+    column-gap: var(--grilla-gap-x);
+    align-items: start;
+    padding-inline: var(--margen-lateral);
+    padding-bottom: var(--espacio-secciones);
+  }
+
+  .about__logo {
+    font-size: var(--fs-logo-about);
+    line-height: var(--lh-logo);
+    letter-spacing: var(--tracking-logo);
+  }
+
+  .about__texto,
+  .about__lista {
+    font-size: var(--fs-cuerpo);
+    color: var(--color-cuerpo);
+  }
+
+  .about__texto {
+    margin-top: var(--about-espacio-logo);
+    line-height: var(--lh-cuerpo);
+  }
+
+  .about__subsecciones {
+    display: grid;
+    grid-template-columns: var(--about-col-software) var(--about-col-idiomas) minmax(0, 1fr);
+    align-items: start;
+    margin-top: var(--about-espacio-subsecciones);
+  }
+
+  .about__columna--idiomas {
+    margin-top: var(--about-escalon-idiomas);
+  }
+
+  .about__columna--educacion {
+    margin-top: var(--about-escalon-educacion);
+  }
+
+  .about__subtitulo {
+    font-size: var(--fs-subtitulo);
+    line-height: var(--lh-subtitulo);
+  }
+
+  .about__lista {
+    margin-top: var(--about-subtitulo-lista);
+    line-height: var(--lh-lista-about);
+    white-space: nowrap;
+  }
+
+  .about__lista li::before {
+    content: '_';
+    content: '_' / '';
+  }
+
+  .about__nota {
+    font-size: var(--fs-nota);
+    line-height: var(--lh-cuerpo);
+  }
+
+  .about__nota--debajo {
+    display: block;
+  }
+
+  .about__lateral {
+    margin-top: var(--about-foto-desfase);
+  }
+
+  .about__foto {
+    aspect-ratio: var(--about-foto-proporcion);
+    overflow: hidden;
+  }
+
+  .about__foto :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    scale: var(--about-foto-zoom);
+    transform-origin: var(--about-foto-zoom-origen);
+  }
+
+  /* Breakpoint PENDIENTE (propuesta: 768px). Mobile aún sin diseñar: se apila. */
+  @media (width < 768px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .about__subsecciones {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .about__columna--idiomas,
+    .about__columna--educacion {
+      margin-top: var(--about-espacio-subsecciones);
+    }
+  }
+</style>

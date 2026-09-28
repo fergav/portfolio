@@ -1,0 +1,27 @@
+---
+// Fondo gris liso hasta que llegue el collage del diseñador.
+// Cuando llegue: <Picture> en src/assets/portada/, a pantalla completa,
+// con loading="eager" y fetchpriority="high" (ver CLAUDE.md).
+---
+
+<header class="portada">
+  <slot />
+  <h1 class="portada__logo display">fergav</h1>
+</header>
+
+<style>
+  .portada {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .portada__logo {
+    position: relative;
+    font-size: var(--fs-logo);
+    line-height: var(--lh-logo);
+    letter-spacing: var(--tracking-logo);
+  }
+</style>

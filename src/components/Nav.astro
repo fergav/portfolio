@@ -1,0 +1,29 @@
+<nav class="nav" aria-label="Principal">
+  <ul class="nav__lista">
+    <li><a class="nav__enlace display" href="#work">Work</a></li>
+    <li><a class="nav__enlace display" href="#about">About</a></li>
+    <li><a class="nav__enlace display" href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<style>
+  .nav {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    z-index: 1;
+    padding-top: var(--nav-espacio-superior);
+    padding-inline: var(--margen-lateral);
+  }
+
+  .nav__lista {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .nav__enlace {
+    font-size: var(--fs-nav);
+    line-height: var(--lh-nav);
+    text-decoration: none;
+  }
+</style>

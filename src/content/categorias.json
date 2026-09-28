@@ -1,0 +1,8 @@
+[
+  { "slug": "touchdesigner", "nombre": "TouchDesigner", "orden": 1 },
+  { "slug": "modelado-3d", "nombre": "Modelado 3D", "orden": 2 },
+  { "slug": "objetos", "nombre": "Objetos", "orden": 3 },
+  { "slug": "fotos-videos", "nombre": "Fotos/Videos", "orden": 4 },
+  { "slug": "grafico", "nombre": "Gráfico", "orden": 5 },
+  { "slug": "diseno-de-servicios", "nombre": "Diseño de Servicios", "orden": 6 }
+]

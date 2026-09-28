@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Portada from '../components/Portada.astro';
+import Categoria from '../components/Categoria.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+
+const categorias = (await getCollection('categorias')).sort((a, b) => a.data.orden - b.data.orden);
+const proyectos = (await getCollection('proyectos')).sort((a, b) => a.data.orden - b.data.orden);
+
+// Una categoría sin proyectos no se muestra.
+const grupos = categorias
+  .map((categoria) => ({
+    categoria,
+    proyectos: proyectos.filter((p) => p.data.categoria.id === categoria.id),
+  }))
+  .filter((g) => g.proyectos.length > 0);
+---
+
+<Base
+  titulo="fergav"
+  descripcion="Portafolio de fergav: fotografía, modelado 3D, TouchDesigner y diseño gráfico."
+>
+  <Portada>
+    <Nav />
+  </Portada>
+  <main>
+    <section class="work" id="work" aria-labelledby="work-titulo">
+      <h2 class="visualmente-oculto" id="work-titulo">Work</h2>
+      {grupos.map((g) => <Categoria categoria={g.categoria} proyectos={g.proyectos} />)}
+    </section>
+    <About>
+      <Contact />
+    </About>
+  </main>
+</Base>
+
+<style>
+  .work {
+    padding-top: var(--espacio-secciones);
+    padding-inline: var(--margen-lateral);
+  }
+
+  main > :global(* + *) {
+    padding-top: var(--espacio-secciones);
+  }
+</style>
