@@ -10,9 +10,8 @@ interface Props {
 const { proyecto } = Astro.props;
 const { titulo, fecha, descripcion, imagen, video, imagenAlt, desplazable, paginado } = proyecto.data;
 
-const fechaTexto = fecha
-  ? fecha.toLocaleDateString('es-CL', { month: 'long', year: 'numeric', timeZone: 'UTC' })
-  : 'Mes AAAA'; // PENDIENTE: placeholder mientras no haya fecha
+// La fecha es opcional: si el proyecto no tiene, la tarjeta no la muestra.
+const fechaTexto = fecha?.toLocaleDateString('es-CL', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 const fechaIso = fecha?.toISOString().slice(0, 7);
 
 // Los videos viven junto al index.md del proyecto; Vite les da una URL con hash.
@@ -68,7 +67,7 @@ const poster = videoUrl ? await getImage({ src: imagen, width: 1280, format: 'we
   </div>
   <div class="tarjeta__texto">
     <h4 class="tarjeta__titulo">{titulo}</h4>
-    {fechaIso ? <time datetime={fechaIso}>{fechaTexto}</time> : <p>{fechaTexto}</p>}
+    {fecha && <time datetime={fechaIso}>{fechaTexto}</time>}
     {descripcion && <p class="tarjeta__descripcion">{descripcion}</p>}
   </div>
 </article>

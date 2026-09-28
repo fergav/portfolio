@@ -20,7 +20,7 @@ const proyectos = defineCollection({
   schema: ({ image }) =>
     z.object({
       titulo: z.string(),
-      // Opcional mientras el diseñador no entregue las fechas.
+      // Opcional: si falta, la tarjeta no muestra fecha.
       fecha: z.coerce.date().optional(),
       descripcion: z.string().optional(),
       categoria: reference('categorias'),
