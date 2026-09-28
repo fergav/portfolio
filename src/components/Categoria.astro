@@ -108,11 +108,21 @@ const idPanel = `panel-${categoria.id}`;
     overflow: hidden;
   }
 
-  /* Un proyecto por fila; las dos columnas las arma cada tarjeta. */
+  /* Dos tarjetas por fila; en mobile, una. */
   .categoria__grilla {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--grilla-gap-x);
     row-gap: var(--grilla-gap-y);
+    align-items: start;
     padding-top: var(--panel-espacio-superior);
     padding-bottom: var(--panel-espacio-inferior);
+  }
+
+  /* Breakpoint PENDIENTE (propuesta: 768px). */
+  @media (width < 768px) {
+    .categoria__grilla {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 </style>
