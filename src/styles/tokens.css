@@ -58,6 +58,7 @@
   --panel-espacio-superior: calc(24 * var(--u)); /* PROVISORIO: título de categoría → grilla */
   --panel-espacio-inferior: calc(48 * var(--u)); /* PROVISORIO: grilla → siguiente categoría */
   --tarjeta-espacio-texto: calc(12 * var(--u)); /* PROVISORIO: imagen → texto */
+  --slider-ancho: max(8px, calc(12 * var(--u))); /* PROVISORIO: slider de las imágenes con scroll */
 
   /* About + Contact: medidos de docs/referencia/about-contact.jpeg (1280 px de ancho → ×1366/1280) */
   --fs-logo-about: calc(170 * var(--u));

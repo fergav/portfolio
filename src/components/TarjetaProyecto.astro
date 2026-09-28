@@ -86,6 +86,29 @@ const poster = videoUrl ? await getImage({ src: imagen, width: 1280, format: 'we
     overscroll-behavior: contain;
   }
 
+  /* Slider siempre visible, para que se note que la imagen sigue hacia abajo.
+     macOS y los trackpads ocultan la barra nativa hasta que uno hace scroll;
+     con estilo propio (Chrome, Safari, Edge) queda fija. */
+  .tarjeta__desplazable::-webkit-scrollbar {
+    width: var(--slider-ancho);
+  }
+
+  .tarjeta__desplazable::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .tarjeta__desplazable::-webkit-scrollbar-thumb {
+    background: var(--color-texto);
+    border: var(--contorno-ancho) solid var(--color-contorno);
+  }
+
+  /* Firefox no soporta ::-webkit-scrollbar: solo colores. */
+  @supports not selector(::-webkit-scrollbar) {
+    .tarjeta__desplazable {
+      scrollbar-color: var(--color-texto) transparent;
+    }
+  }
+
   .tarjeta__desplazable :global(img) {
     width: 100%;
     height: auto;
