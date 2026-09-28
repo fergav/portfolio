@@ -109,12 +109,18 @@ const desfase = video ? 1 : 0;
     width: 100%;
     aspect-ratio: var(--proporcion-imagen);
     overflow-x: auto;
+    overflow-y: hidden;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
   }
 
+  /* Con JS se navega con las flechas: sin barra de scroll en ningún navegador. */
   .paginas--js .paginas__tira {
     scrollbar-width: none;
+  }
+
+  .paginas--js .paginas__tira::-webkit-scrollbar {
+    display: none;
   }
 
   .paginas__pagina {
@@ -122,8 +128,11 @@ const desfase = video ? 1 : 0;
     scroll-snap-align: start;
   }
 
+  /* display: block evita el espacio bajo el video (elemento en línea) que hacía
+     la página más alta que el recuadro y agregaba scroll vertical. */
   .paginas__pagina video,
   .paginas__pagina :global(img) {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
