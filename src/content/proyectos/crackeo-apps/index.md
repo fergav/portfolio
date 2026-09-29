@@ -1,6 +1,6 @@
 ---
 # Origen: Gr*ficock/CrackedIan.png
-titulo: "Afiche CRACKEO APPS"
+titulo: "Afiche Crackeo Apps_"
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
 descripcion: ""
 categoria: grafico
