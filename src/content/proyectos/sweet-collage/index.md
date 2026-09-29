@@ -1,11 +1,11 @@
 ---
 # Origen: Touch Designer/sweetcollage.mov · video: Touch Designer/sweetcollage.mov
-titulo: "Collage de videos audioreactivo_canción Aluralura por SweetTrip."
+titulo: "Collage de videos audioreactivo_canción Aluralura de SweetTrip."
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
 descripcion: ""
 categoria: touchdesigner
 imagen: ./sweetcollagef.jpg
 video: ./sweetcollage.mp4
 imagenAlt: "TODO-ALT"
-orden: 6
+orden: 1
 ---
