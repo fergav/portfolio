@@ -5,7 +5,7 @@ titulo: "Visual Audioreactiva presentada en @catarsisorg"
 descripcion: ""
 categoria: touchdesigner
 imagen: ./imagen.jpg
-video: ./video.mp4
+video: ./juliliCatarSHI.mp4
 imagenAlt: "TODO-ALT"
 orden: 3
 ---

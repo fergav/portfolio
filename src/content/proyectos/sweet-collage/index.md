@@ -4,8 +4,8 @@ titulo: "Collage de videos audioreactivo_canción Aluralura por SweetTrip."
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
 descripcion: ""
 categoria: touchdesigner
-imagen: ./imagen.jpg
-video: ./video.mp4
+imagen: ./sweetcollagef.jpg
+video: ./sweetcollage.mp4
 imagenAlt: "TODO-ALT"
 orden: 6
 ---

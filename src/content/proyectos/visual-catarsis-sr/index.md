@@ -1,11 +1,11 @@
 ---
 # Origen: Touch Designer/Visual Catarsis Sr.mov · video: Touch Designer/Visual Catarsis Sr.mov
-titulo: "Título del proyecto"
+titulo: "u_u"
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
-descripcion: "Descripción breve del proyecto: qué es, en qué contexto se hizo y con qué herramientas."
+descripcion: ""
 categoria: touchdesigner
-imagen: ./imagen.jpg
-video: ./video.mp4
+imagen: ./catarshii.jpg
+video: ./catarsis1080.mp4
 imagenAlt: "TODO-ALT"
 orden: 4
 ---
