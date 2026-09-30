@@ -2,13 +2,14 @@
 import { Image, getImage } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import PaginasProyecto from './PaginasProyecto.astro';
+import VideoProyecto from './VideoProyecto.astro';
 
 interface Props {
   proyecto: CollectionEntry<'proyectos'>;
 }
 
 const { proyecto } = Astro.props;
-const { titulo, fecha, descripcion, imagen, video, imagenAlt, desplazable, paginado, sinContador } = proyecto.data;
+const { titulo, fecha, descripcion, imagen, video, imagenAlt, desplazable, paginado, sinContador, autoplay } = proyecto.data;
 
 // La fecha es opcional: si el proyecto no tiene, la tarjeta no la muestra.
 const fechaTexto = fecha?.toLocaleDateString('es-CL', { month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -30,17 +31,11 @@ const poster = videoUrl ? await getImage({ src: imagen, width: 1280, format: 'we
   <div class="tarjeta__visual">
     {
       paginado ? (
-        <PaginasProyecto carpeta={carpeta} alt={imagenAlt} video={videoUrl} poster={poster?.src} contador={!sinContador} />
+        <PaginasProyecto carpeta={carpeta} alt={imagenAlt} video={videoUrl} poster={poster?.src} contador={!sinContador} autoplay={autoplay} />
       ) : videoUrl ? (
-        <video
-          class="tarjeta__medio"
-          src={videoUrl}
-          poster={poster!.src}
-          controls
-          preload="none"
-          playsinline
-          aria-label={imagenAlt}
-        />
+        <div class="tarjeta__medio">
+          <VideoProyecto src={videoUrl} poster={poster!.src} alt={imagenAlt} autoplay={autoplay} />
+        </div>
       ) : desplazable ? (
         // Imagen alta: ocupa todo el ancho y se recorre con scroll dentro del recuadro.
         // tabindex para poder desplazarla también con el teclado.

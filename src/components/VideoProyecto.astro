@@ -1,0 +1,149 @@
+---
+interface Props {
+  src: string;
+  poster?: string;
+  alt: string;
+  // true: parte solo, en loop y sin sonido mientras se ve; solo muestra el botón de sonido.
+  // false: queda detenido, con botones de play, sonido y pantalla completa.
+  autoplay?: boolean;
+}
+
+const { src, poster, alt, autoplay = false } = Astro.props;
+---
+
+<div class="video" data-video data-autoplay={autoplay ? '' : undefined}>
+  <!-- Sin JS: controles nativos. Con JS se reemplazan por los botones de abajo. -->
+  <video
+    class="video__medio"
+    src={src}
+    poster={poster}
+    controls
+    preload="none"
+    playsinline
+    muted={autoplay}
+    loop={autoplay}
+    aria-label={alt}
+  />
+  <div class="video__controles display" hidden>
+    {
+      !autoplay && (
+        <button class="video__boton" type="button" data-accion="play">
+          Play
+        </button>
+      )
+    }
+    <button class="video__boton" type="button" data-accion="sonido">
+      {autoplay ? 'Sonido' : 'Silenciar'}
+    </button>
+    {
+      !autoplay && (
+        <button class="video__boton video__boton--final" type="button" data-accion="pantalla">
+          Pantalla completa
+        </button>
+      )
+    }
+  </div>
+</div>
+
+<script>
+  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-video]')) {
+    const video = raiz.querySelector('video')!;
+    const controles = raiz.querySelector<HTMLElement>('.video__controles')!;
+    const play = raiz.querySelector<HTMLButtonElement>('[data-accion="play"]');
+    const sonido = raiz.querySelector<HTMLButtonElement>('[data-accion="sonido"]')!;
+    const pantalla = raiz.querySelector<HTMLButtonElement>('[data-accion="pantalla"]');
+    // Con "reducir movimiento" activado, los videos en loop no parten solos: se comportan como los demás.
+    const automatico = raiz.hasAttribute('data-autoplay') && !reducido.matches;
+
+    video.controls = false;
+    controles.hidden = false;
+
+    const refrescar = () => {
+      if (play) play.textContent = video.paused ? 'Play' : 'Pausa';
+      sonido.textContent = video.muted ? 'Sonido' : 'Silenciar';
+      sonido.setAttribute('aria-pressed', String(!video.muted));
+    };
+
+    const alternar = () => (video.paused ? video.play().catch(() => {}) : video.pause());
+
+    play?.addEventListener('click', alternar);
+    sonido.addEventListener('click', () => (video.muted = !video.muted));
+    video.addEventListener('play', refrescar);
+    video.addEventListener('pause', refrescar);
+    video.addEventListener('volumechange', refrescar);
+
+    if (automatico) {
+      // Solo corre mientras está a la vista: así no se descargan ni reproducen videos
+      // de categorías cerradas o de páginas del carrusel que no se están mirando.
+      video.muted = true;
+      new IntersectionObserver(
+        ([entrada]) => (entrada.isIntersecting ? video.play().catch(() => {}) : video.pause()),
+        { threshold: 0.25 },
+      ).observe(video);
+    } else {
+      // Sin loop: al hacer clic en el video también se pausa o reproduce.
+      video.addEventListener('click', alternar);
+      if (raiz.hasAttribute('data-autoplay')) {
+        // Reducir movimiento: el video marcado como autoplay queda con controles completos.
+        video.loop = false;
+        video.muted = false;
+      }
+    }
+
+    pantalla?.addEventListener('click', () => {
+      if (video.requestFullscreen) {
+        video.requestFullscreen().catch(() => {});
+      } else {
+        // Safari de iPhone solo permite pantalla completa desde el propio video.
+        (video as HTMLVideoElement & { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen?.();
+      }
+    });
+    // En pantalla completa no se ven nuestros botones: ahí sí van los controles nativos.
+    document.addEventListener('fullscreenchange', () => {
+      video.controls = document.fullscreenElement === video;
+    });
+
+    refrescar();
+  }
+</script>
+
+<style>
+  .video {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* display: block evita el espacio bajo el video (elemento en línea). */
+  .video__medio {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .video__controles {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    gap: var(--grilla-gap-x);
+    padding: 0 var(--tarjeta-espacio-texto);
+    font-size: var(--fs-subtitulo);
+    line-height: var(--lh-subtitulo);
+    pointer-events: none; /* los clics entre botones llegan al video */
+  }
+
+  .video__controles[hidden] {
+    display: none;
+  }
+
+  .video__boton {
+    pointer-events: auto;
+  }
+
+  .video__boton--final {
+    margin-left: auto;
+  }
+</style>
