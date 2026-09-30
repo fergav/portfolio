@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import VideoProyecto from './VideoProyecto.astro';
 
 interface Props {
   carpeta: string; // ej. "/src/content/proyectos/bzero"
@@ -9,10 +8,9 @@ interface Props {
   video?: string; // si hay, va como primera lámina
   poster?: string;
   contador?: boolean; // false: solo flechas, sin "1 / N"
-  autoplay?: boolean; // el video parte solo, en loop y sin sonido
 }
 
-const { carpeta, alt, video, poster, contador = true, autoplay = false } = Astro.props;
+const { carpeta, alt, video, poster, contador = true } = Astro.props;
 
 // Láminas: <carpeta>/paginas/p-01.jpg, p-02.jpg, … (páginas de PDF u otras imágenes)
 const todas = import.meta.glob<ImageMetadata>('/src/content/proyectos/*/paginas/*.jpg', {
@@ -33,7 +31,7 @@ const desfase = video ? 1 : 0;
     {
       video && (
         <div class="paginas__pagina" role="group" aria-label={`Página 1 de ${total}`}>
-          <VideoProyecto src={video} poster={poster} alt={alt} autoplay={autoplay} />
+          <video src={video} poster={poster} controls preload="none" playsinline aria-label={alt} />
         </div>
       )
     }
@@ -136,8 +134,9 @@ const desfase = video ? 1 : 0;
     scroll-snap-align: start;
   }
 
-  /* display: block evita el espacio bajo la imagen (elemento en línea) que hacía
+  /* display: block evita el espacio bajo el video (elemento en línea) que hacía
      la página más alta que el recuadro y agregaba scroll vertical. */
+  .paginas__pagina video,
   .paginas__pagina :global(img) {
     display: block;
     width: 100%;

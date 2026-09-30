@@ -27,8 +27,6 @@ const proyectos = defineCollection({
       // Si hay video, la imagen es su póster (primer cuadro que se ve).
       imagen: image(),
       video: z.string().optional(),
-      // Con video: parte solo en loop y sin sonido (botón para activarlo). Sin esto: play, sonido y pantalla completa.
-      autoplay: z.boolean().optional(),
       // Imágenes muy altas: llenan el ancho del recuadro y se recorren con scroll vertical.
       desplazable: z.boolean().optional(),
       // Varias láminas (carpeta paginas/, y el video primero si hay): se hojean con flechas.
