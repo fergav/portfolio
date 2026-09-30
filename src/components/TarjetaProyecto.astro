@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { proyecto } = Astro.props;
-const { titulo, fecha, descripcion, imagen, video, imagenAlt, desplazable, paginado } = proyecto.data;
+const { titulo, fecha, descripcion, imagen, video, imagenAlt, desplazable, paginado, sinContador } = proyecto.data;
 
 // La fecha es opcional: si el proyecto no tiene, la tarjeta no la muestra.
 const fechaTexto = fecha?.toLocaleDateString('es-CL', { month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -30,7 +30,7 @@ const poster = videoUrl ? await getImage({ src: imagen, width: 1280, format: 'we
   <div class="tarjeta__visual">
     {
       paginado ? (
-        <PaginasProyecto carpeta={carpeta} alt={imagenAlt} video={videoUrl} poster={poster?.src} />
+        <PaginasProyecto carpeta={carpeta} alt={imagenAlt} video={videoUrl} poster={poster?.src} contador={!sinContador} />
       ) : videoUrl ? (
         <video
           class="tarjeta__medio"

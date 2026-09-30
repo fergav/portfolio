@@ -31,6 +31,8 @@ const proyectos = defineCollection({
       desplazable: z.boolean().optional(),
       // Varias láminas (carpeta paginas/, y el video primero si hay): se hojean con flechas.
       paginado: z.boolean().optional(),
+      // Con paginado: oculta el contador de páginas ("1 / 10") y deja solo las flechas.
+      sinContador: z.boolean().optional(),
       imagenAlt: z.string(),
       orden: z.number(),
     }),

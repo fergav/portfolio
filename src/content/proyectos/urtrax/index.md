@@ -6,6 +6,7 @@ descripcion: ""
 categoria: fotos-videos
 imagen: ./imagen.jpg
 paginado: true
+sinContador: true
 imagenAlt: "TODO-ALT"
 orden: 7
 ---

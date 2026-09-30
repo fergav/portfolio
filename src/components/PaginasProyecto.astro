@@ -7,9 +7,10 @@ interface Props {
   alt: string;
   video?: string; // si hay, va como primera lámina
   poster?: string;
+  contador?: boolean; // false: solo flechas, sin "1 / N"
 }
 
-const { carpeta, alt, video, poster } = Astro.props;
+const { carpeta, alt, video, poster, contador = true } = Astro.props;
 
 // Láminas: <carpeta>/paginas/p-01.jpg, p-02.jpg, … (páginas de PDF u otras imágenes)
 const todas = import.meta.glob<ImageMetadata>('/src/content/proyectos/*/paginas/*.jpg', {
@@ -54,21 +55,25 @@ const desfase = video ? 1 : 0;
   <button class="paginas__flecha paginas__flecha--siguiente display" type="button" aria-label="Página siguiente" hidden>
     →
   </button>
-  <p class="paginas__contador display" aria-live="polite" hidden>
-    <span data-actual>1</span> / {total}
-  </p>
+  {
+    contador && (
+      <p class="paginas__contador display" aria-live="polite" hidden>
+        <span data-actual>1</span> / {total}
+      </p>
+    )
+  }
 </div>
 
 <script>
-  // Sin JS, la tira se recorre con scroll horizontal; con JS aparecen flechas y contador.
+  // Sin JS, la tira se recorre con scroll horizontal; con JS aparecen flechas y contador (si lo hay).
   const reducido = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   for (const raiz of document.querySelectorAll<HTMLElement>('[data-paginas]')) {
     const tira = raiz.querySelector<HTMLElement>('.paginas__tira')!;
     const anterior = raiz.querySelector<HTMLButtonElement>('.paginas__flecha--anterior')!;
     const siguiente = raiz.querySelector<HTMLButtonElement>('.paginas__flecha--siguiente')!;
-    const contador = raiz.querySelector<HTMLElement>('.paginas__contador')!;
-    const actual = raiz.querySelector<HTMLElement>('[data-actual]')!;
+    const contador = raiz.querySelector<HTMLElement>('.paginas__contador');
+    const actual = raiz.querySelector<HTMLElement>('[data-actual]');
     const total = tira.children.length;
 
     const indice = () => Math.round(tira.scrollLeft / tira.clientWidth);
@@ -79,7 +84,7 @@ const desfase = video ? 1 : 0;
       [...tira.children].forEach((pagina, n) => {
         if (n !== i) pagina.querySelector('video')?.pause();
       });
-      actual.textContent = String(i + 1);
+      if (actual) actual.textContent = String(i + 1);
       anterior.disabled = i === 0;
       siguiente.disabled = i === total - 1;
     };
@@ -94,7 +99,8 @@ const desfase = video ? 1 : 0;
     tira.addEventListener('scroll', refrescar, { passive: true });
 
     raiz.classList.add('paginas--js');
-    anterior.hidden = siguiente.hidden = contador.hidden = false;
+    anterior.hidden = siguiente.hidden = false;
+    if (contador) contador.hidden = false;
     refrescar();
   }
 </script>

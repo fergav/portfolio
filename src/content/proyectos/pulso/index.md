@@ -7,6 +7,7 @@ categoria: touchdesigner
 imagen: ./imagen.jpg
 video: ./video.mp4
 paginado: true
+sinContador: true
 imagenAlt: "TODO-ALT"
 orden: 6
 ---
