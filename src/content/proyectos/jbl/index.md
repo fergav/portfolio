@@ -4,7 +4,7 @@ titulo: "Modelado JBL Flip 6"
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
 descripcion: ""
 categoria: modelado-3d
-imagen: ./imagen.png
+imagen: ./jblRender.png
 imagenAlt: "TODO-ALT"
 orden: 6
 ---

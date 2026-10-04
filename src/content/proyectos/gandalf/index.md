@@ -4,7 +4,7 @@ titulo: "Render Lego Gandalf"
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
 descripcion: ""
 categoria: modelado-3d
-imagen: ./imagen.png
+imagen: ./GandalfRENDER.png
 imagenAlt: "TODO-ALT"
 orden: 2
 ---

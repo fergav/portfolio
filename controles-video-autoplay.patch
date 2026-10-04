@@ -1,0 +1,280 @@
+From 11d7e6000f84a72a00be279efac192f86daec8c7 Mon Sep 17 00:00:00 2001
+From: fergav <fernagavilan@gmail.com>
+Date: Tue, 29 Sep 2026 23:28:43 -0300
+Subject: [PATCH] Controles propios para los videos y campo autoplay
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Los videos usan botones en el estilo del sitio (play, sonido y pantalla
+completa) en vez de los controles nativos. Con autoplay: true en el
+frontmatter, el video parte solo en loop y sin sonido mientras está a la
+vista, y solo muestra el botón de sonido.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_016wr1tkhteCKP1RfgRAvPpN
+---
+ src/components/PaginasProyecto.astro |   9 +-
+ src/components/TarjetaProyecto.astro |  17 ++-
+ src/components/VideoProyecto.astro   | 149 +++++++++++++++++++++++++++
+ src/content.config.ts                |   2 +
+ 4 files changed, 162 insertions(+), 15 deletions(-)
+ create mode 100644 src/components/VideoProyecto.astro
+
+diff --git a/src/components/PaginasProyecto.astro b/src/components/PaginasProyecto.astro
+index 34893d8..2aec24e 100644
+--- a/src/components/PaginasProyecto.astro
++++ b/src/components/PaginasProyecto.astro
+@@ -1,6 +1,7 @@
+ ---
+ import { Image } from 'astro:assets';
+ import type { ImageMetadata } from 'astro';
++import VideoProyecto from './VideoProyecto.astro';
+ 
+ interface Props {
+   carpeta: string; // ej. "/src/content/proyectos/bzero"
+@@ -8,9 +9,10 @@ interface Props {
+   video?: string; // si hay, va como primera lámina
+   poster?: string;
+   contador?: boolean; // false: solo flechas, sin "1 / N"
++  autoplay?: boolean; // el video parte solo, en loop y sin sonido
+ }
+ 
+-const { carpeta, alt, video, poster, contador = true } = Astro.props;
++const { carpeta, alt, video, poster, contador = true, autoplay = false } = Astro.props;
+ 
+ // Láminas: <carpeta>/paginas/p-01.jpg, p-02.jpg, … (páginas de PDF u otras imágenes)
+ const todas = import.meta.glob<ImageMetadata>('/src/content/proyectos/*/paginas/*.jpg', {
+@@ -31,7 +33,7 @@ const desfase = video ? 1 : 0;
+     {
+       video && (
+         <div class="paginas__pagina" role="group" aria-label={`Página 1 de ${total}`}>
+-          <video src={video} poster={poster} controls preload="none" playsinline aria-label={alt} />
++          <VideoProyecto src={video} poster={poster} alt={alt} autoplay={autoplay} />
+         </div>
+       )
+     }
+@@ -134,9 +136,8 @@ const desfase = video ? 1 : 0;
+     scroll-snap-align: start;
+   }
+ 
+-  /* display: block evita el espacio bajo el video (elemento en línea) que hacía
++  /* display: block evita el espacio bajo la imagen (elemento en línea) que hacía
+      la página más alta que el recuadro y agregaba scroll vertical. */
+-  .paginas__pagina video,
+   .paginas__pagina :global(img) {
+     display: block;
+     width: 100%;
+diff --git a/src/components/TarjetaProyecto.astro b/src/components/TarjetaProyecto.astro
+index d565e8d..700028c 100644
+--- a/src/components/TarjetaProyecto.astro
++++ b/src/components/TarjetaProyecto.astro
+@@ -2,13 +2,14 @@
+ import { Image, getImage } from 'astro:assets';
+ import type { CollectionEntry } from 'astro:content';
+ import PaginasProyecto from './PaginasProyecto.astro';
++import VideoProyecto from './VideoProyecto.astro';
+ 
+ interface Props {
+   proyecto: CollectionEntry<'proyectos'>;
+ }
+ 
+ const { proyecto } = Astro.props;
+-const { titulo, fecha, descripcion, imagen, video, imagenAlt, desplazable, paginado, sinContador } = proyecto.data;
++const { titulo, fecha, descripcion, imagen, video, imagenAlt, desplazable, paginado, sinContador, autoplay } = proyecto.data;
+ 
+ // La fecha es opcional: si el proyecto no tiene, la tarjeta no la muestra.
+ const fechaTexto = fecha?.toLocaleDateString('es-CL', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+@@ -30,17 +31,11 @@ const poster = videoUrl ? await getImage({ src: imagen, width: 1280, format: 'we
+   <div class="tarjeta__visual">
+     {
+       paginado ? (
+-        <PaginasProyecto carpeta={carpeta} alt={imagenAlt} video={videoUrl} poster={poster?.src} contador={!sinContador} />
++        <PaginasProyecto carpeta={carpeta} alt={imagenAlt} video={videoUrl} poster={poster?.src} contador={!sinContador} autoplay={autoplay} />
+       ) : videoUrl ? (
+-        <video
+-          class="tarjeta__medio"
+-          src={videoUrl}
+-          poster={poster!.src}
+-          controls
+-          preload="none"
+-          playsinline
+-          aria-label={imagenAlt}
+-        />
++        <div class="tarjeta__medio">
++          <VideoProyecto src={videoUrl} poster={poster!.src} alt={imagenAlt} autoplay={autoplay} />
++        </div>
+       ) : desplazable ? (
+         // Imagen alta: ocupa todo el ancho y se recorre con scroll dentro del recuadro.
+         // tabindex para poder desplazarla también con el teclado.
+diff --git a/src/components/VideoProyecto.astro b/src/components/VideoProyecto.astro
+new file mode 100644
+index 0000000..8d25fa7
+--- /dev/null
++++ b/src/components/VideoProyecto.astro
+@@ -0,0 +1,149 @@
++---
++interface Props {
++  src: string;
++  poster?: string;
++  alt: string;
++  // true: parte solo, en loop y sin sonido mientras se ve; solo muestra el botón de sonido.
++  // false: queda detenido, con botones de play, sonido y pantalla completa.
++  autoplay?: boolean;
++}
++
++const { src, poster, alt, autoplay = false } = Astro.props;
++---
++
++<div class="video" data-video data-autoplay={autoplay ? '' : undefined}>
++  <!-- Sin JS: controles nativos. Con JS se reemplazan por los botones de abajo. -->
++  <video
++    class="video__medio"
++    src={src}
++    poster={poster}
++    controls
++    preload="none"
++    playsinline
++    muted={autoplay}
++    loop={autoplay}
++    aria-label={alt}
++  />
++  <div class="video__controles display" hidden>
++    {
++      !autoplay && (
++        <button class="video__boton" type="button" data-accion="play">
++          Play
++        </button>
++      )
++    }
++    <button class="video__boton" type="button" data-accion="sonido">
++      {autoplay ? 'Sonido' : 'Silenciar'}
++    </button>
++    {
++      !autoplay && (
++        <button class="video__boton video__boton--final" type="button" data-accion="pantalla">
++          Pantalla completa
++        </button>
++      )
++    }
++  </div>
++</div>
++
++<script>
++  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)');
++
++  for (const raiz of document.querySelectorAll<HTMLElement>('[data-video]')) {
++    const video = raiz.querySelector('video')!;
++    const controles = raiz.querySelector<HTMLElement>('.video__controles')!;
++    const play = raiz.querySelector<HTMLButtonElement>('[data-accion="play"]');
++    const sonido = raiz.querySelector<HTMLButtonElement>('[data-accion="sonido"]')!;
++    const pantalla = raiz.querySelector<HTMLButtonElement>('[data-accion="pantalla"]');
++    // Con "reducir movimiento" activado, los videos en loop no parten solos: se comportan como los demás.
++    const automatico = raiz.hasAttribute('data-autoplay') && !reducido.matches;
++
++    video.controls = false;
++    controles.hidden = false;
++
++    const refrescar = () => {
++      if (play) play.textContent = video.paused ? 'Play' : 'Pausa';
++      sonido.textContent = video.muted ? 'Sonido' : 'Silenciar';
++      sonido.setAttribute('aria-pressed', String(!video.muted));
++    };
++
++    const alternar = () => (video.paused ? video.play().catch(() => {}) : video.pause());
++
++    play?.addEventListener('click', alternar);
++    sonido.addEventListener('click', () => (video.muted = !video.muted));
++    video.addEventListener('play', refrescar);
++    video.addEventListener('pause', refrescar);
++    video.addEventListener('volumechange', refrescar);
++
++    if (automatico) {
++      // Solo corre mientras está a la vista: así no se descargan ni reproducen videos
++      // de categorías cerradas o de páginas del carrusel que no se están mirando.
++      video.muted = true;
++      new IntersectionObserver(
++        ([entrada]) => (entrada.isIntersecting ? video.play().catch(() => {}) : video.pause()),
++        { threshold: 0.25 },
++      ).observe(video);
++    } else {
++      // Sin loop: al hacer clic en el video también se pausa o reproduce.
++      video.addEventListener('click', alternar);
++      if (raiz.hasAttribute('data-autoplay')) {
++        // Reducir movimiento: el video marcado como autoplay queda con controles completos.
++        video.loop = false;
++        video.muted = false;
++      }
++    }
++
++    pantalla?.addEventListener('click', () => {
++      if (video.requestFullscreen) {
++        video.requestFullscreen().catch(() => {});
++      } else {
++        // Safari de iPhone solo permite pantalla completa desde el propio video.
++        (video as HTMLVideoElement & { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen?.();
++      }
++    });
++    // En pantalla completa no se ven nuestros botones: ahí sí van los controles nativos.
++    document.addEventListener('fullscreenchange', () => {
++      video.controls = document.fullscreenElement === video;
++    });
++
++    refrescar();
++  }
++</script>
++
++<style>
++  .video {
++    position: relative;
++    width: 100%;
++    height: 100%;
++  }
++
++  /* display: block evita el espacio bajo el video (elemento en línea). */
++  .video__medio {
++    display: block;
++    width: 100%;
++    height: 100%;
++    object-fit: contain;
++  }
++
++  .video__controles {
++    position: absolute;
++    inset: auto 0 0 0;
++    display: flex;
++    gap: var(--grilla-gap-x);
++    padding: 0 var(--tarjeta-espacio-texto);
++    font-size: var(--fs-subtitulo);
++    line-height: var(--lh-subtitulo);
++    pointer-events: none; /* los clics entre botones llegan al video */
++  }
++
++  .video__controles[hidden] {
++    display: none;
++  }
++
++  .video__boton {
++    pointer-events: auto;
++  }
++
++  .video__boton--final {
++    margin-left: auto;
++  }
++</style>
+diff --git a/src/content.config.ts b/src/content.config.ts
+index 429c72e..91faa84 100644
+--- a/src/content.config.ts
++++ b/src/content.config.ts
+@@ -27,6 +27,8 @@ const proyectos = defineCollection({
+       // Si hay video, la imagen es su póster (primer cuadro que se ve).
+       imagen: image(),
+       video: z.string().optional(),
++      // Con video: parte solo en loop y sin sonido (botón para activarlo). Sin esto: play, sonido y pantalla completa.
++      autoplay: z.boolean().optional(),
+       // Imágenes muy altas: llenan el ancho del recuadro y se recorren con scroll vertical.
+       desplazable: z.boolean().optional(),
+       // Varias láminas (carpeta paginas/, y el video primero si hay): se hojean con flechas.
+-- 
+2.43.0
+
