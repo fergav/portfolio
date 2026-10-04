@@ -4,7 +4,7 @@ titulo: "Video para ramo de iluminación donde se busca representar la emoción 
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
 descripcion: ""
 categoria: fotos-videos
-imagen: ./imagen.jpg
+imagen: ./scawy.jpg
 video: ./video.mp4
 imagenAlt: "TODO-ALT"
 orden: 3

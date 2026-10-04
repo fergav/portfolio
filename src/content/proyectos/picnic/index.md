@@ -4,7 +4,7 @@ titulo: "Video para Taller de Conceptualización donde se muestra resultado de m
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
 descripcion: ""
 categoria: fotos-videos
-imagen: ./imagen.jpg
+imagen: ./picnicitaliano.jpg
 video: ./video.mp4
 imagenAlt: "TODO-ALT"
 orden: 5

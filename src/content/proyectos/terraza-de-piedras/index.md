@@ -4,7 +4,7 @@ titulo: "Registro de proceso de resignificación de un “no espacio” dentro d
 # fecha: AAAA-MM-DD   (pendiente; si falta, la tarjeta muestra "Mes AAAA")
 descripcion: ""
 categoria: fotos-videos
-imagen: ./imagen.jpg
+imagen: ./terrazadepiedras.jpg
 video: ./video.mp4
 imagenAlt: "TODO-ALT"
 orden: 6
